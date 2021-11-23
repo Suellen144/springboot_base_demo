@@ -75,5 +75,6 @@ public class DateTest {
     @Test
     public void timeTest() {
         System.out.println(Instant.now());
+        String formatDateTime = DateUtil.formatDateTime(new Date());
     }
 }
