@@ -28,7 +28,7 @@ public class MybatisCode {
         gc.setOpen(false);
         gc.setFileOverride(false);
         gc.setServiceName("%sService");
-        gc.setIdType(IdType.ID_WORKER);
+        gc.setIdType(IdType.ASSIGN_UUID);
         gc.setDateType(DateType.ONLY_DATE);
         gc.setSwagger2(true);
         mpg.setGlobalConfig(gc);
@@ -56,7 +56,7 @@ public class MybatisCode {
 
         //策略配置
         StrategyConfig sc = new StrategyConfig();
-        sc.setInclude("aop_demo");
+        sc.setInclude("user_test");
         sc.setNaming(NamingStrategy.underline_to_camel);
         sc.setColumnNaming(NamingStrategy.underline_to_camel);
         sc.setEntityLombokModel(true);

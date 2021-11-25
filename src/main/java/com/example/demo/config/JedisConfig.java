@@ -35,6 +35,7 @@ public class JedisConfig {
     private Long maxWait;
     @Value("${spring.redis.jedis.pool.min-idle:0}")
     private Integer minIdle;
+
     @Bean
     public JedisPool jedisPoolFactory() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();

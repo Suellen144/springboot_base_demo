@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
  * @author zhk
  * @since 2021-11-19
  */
-@Service
 public interface UserService extends IService<User> {
 
+    User selectUserById(Integer id);
+
+    Boolean updateUserById(Integer id);
 }

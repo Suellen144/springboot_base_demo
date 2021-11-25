@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.io.*;
 
 @RestController
 @RequestMapping("/file")
+@Slf4j
 public class FileController {
 
     @PostMapping(value = "/upload")
@@ -43,7 +45,7 @@ public class FileController {
         String originalFilename = file.getOriginalFilename();
         String path = filePath+"/"+originalFilename;
 
-        //log.info("createLocalFile path = {}", path);
+        log.info("createLocalFile path = {}", path);
 
         localFile = new File(path);
         FileOutputStream fos = null;
@@ -55,7 +57,7 @@ public class FileController {
                     boolean delete = localFile.delete();
                     if (!delete){
                         System.out.println("--error");
-                        //log.error("Delete exist file \"{}\" failed!!!",path,new Exception("Delete exist file \""+path+"\" failed!!!"));
+                        log.error("Delete exist file \"{}\" failed!!!",path,new Exception("Delete exist file \""+path+"\" failed!!!"));
                     }
                 }
                 //创建文件
@@ -65,7 +67,7 @@ public class FileController {
                     if (!newFile){
                         System.out.println("--error");
                     }
-                    //log.info("Create file successfully,the file is {}",path);
+                    log.info("Create file successfully,the file is {}",path);
                 }
 
                 //创建文件成功后，写入内容到文件里
@@ -80,7 +82,7 @@ public class FileController {
                 }
 
                 fos.flush();
-                //log.info("Reading uploaded file and buffering to local successfully!");
+                log.info("Reading uploaded file and buffering to local successfully!");
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -94,7 +96,7 @@ public class FileController {
                     }
                 } catch (IOException e) {
                     System.out.println("error");
-                    //log.error("InputStream or OutputStream close error : {}", e);
+                    log.error("InputStream or OutputStream close error : {}", e);
                     return false;
                 }
             }

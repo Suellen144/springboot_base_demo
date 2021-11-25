@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.annotation.AopAnnotation;
+import com.example.demo.common.CommonResult;
 import com.example.demo.entity.User;
 import com.example.demo.enums.AopEnum;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.service.UserService;
 import com.example.demo.utils.ObjectToBeanUtils;
 import com.example.demo.utils.RedisUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,8 @@ public class UserController {
     UserMapper userMapper;
     @Resource
     RedisUtils redisUtils;
+    @Resource
+    UserService userService;
 
     @GetMapping("/selectUserList")
     @ApiOperation(value = "测试查询所有",notes = "测试查询所有")
@@ -70,6 +74,20 @@ public class UserController {
     public int addUser(@RequestBody User user){
        userMapper.insert(user);
        return user.getId();
+    }
+
+    @GetMapping("/selectUserById")
+    @ApiOperation(value = "查询",notes = "查询")
+    public CommonResult<User> selectUserById(@RequestParam Integer id){
+        System.out.println(userService.selectUserById(id));
+        return new CommonResult<>(200,"测试",userService.selectUserById(id));
+    }
+
+    @PostMapping("/updateUserById")
+    @ApiOperation(value = "修改",notes = "修改")
+    public Boolean updateUserById(@RequestParam Integer id){
+        System.out.println(userService.updateUserById(id));
+        return userService.updateUserById(id);
     }
 }
 

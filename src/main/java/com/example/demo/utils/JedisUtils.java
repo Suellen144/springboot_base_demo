@@ -21,7 +21,6 @@ public class JedisUtils {
     @Resource
     private JedisPool jedisPool;
 
-
     /**
      * 向Redis中存值，永久有效
      */

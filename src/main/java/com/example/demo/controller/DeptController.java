@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.annotation.AopAnnotation;
+import com.example.demo.common.CommonResult;
 import com.example.demo.entity.Dept;
 import com.example.demo.enums.AopEnum;
 import com.example.demo.mapper.DeptMapper;
@@ -36,7 +37,7 @@ public class DeptController {
 
     @GetMapping("/selectDeptList")
     @ApiOperation(value = "测试查询所有",notes = "测试查询所有")
-    public List<Dept> selectDeptList(){
+    public CommonResult<List<Dept>> selectDeptList(){
         List<Dept> deptList = new ArrayList<>();
         boolean hasKey = jedisUtils.exists("deptList");
         if(hasKey){
@@ -57,7 +58,7 @@ public class DeptController {
             String jsonString = JSON.toJSONString(deptList);
             jedisUtils.set("deptList",jsonString);
         }
-        return deptList;
+        return new CommonResult<List<Dept>>(200,"测试",deptList);
     }
 
     @PostMapping("/addDept")

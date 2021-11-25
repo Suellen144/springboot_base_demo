@@ -2,19 +2,26 @@ package com.example.demo;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserTest;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.mapper.UserTestMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,10 +31,15 @@ import java.util.Map;
  **/
 
 @SpringBootTest
+@Slf4j
 public class DateTest {
 
     @Resource
     UserMapper userMapper;
+    @Resource
+    private RestTemplate restTemplate;
+    @Resource
+    UserTestMapper userTestMapper;
 
     @Test
     public void dateTest() {
@@ -73,8 +85,22 @@ public class DateTest {
     }
 
     @Test
-    public void timeTest() {
-        System.out.println(Instant.now());
-        String formatDateTime = DateUtil.formatDateTime(new Date());
+    public void resultTest() {
+        String url = "http://localhost:9000/user/selectUserById?id={id}";
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("id",30);
+        String forObject = restTemplate.getForObject(url,String.class,map);
+        JSONObject jsonObject = JSONObject.parseObject(forObject);
+        Object data = jsonObject.get("data");
+        User user = JSON.parseObject(jsonObject.get("data").toString(), User.class);
+        System.out.println(forObject);
+        System.out.println("==="+user.toString());
+    }
+
+    @Test
+    public void userTest2() {
+        UserTest userTest = new UserTest();
+        userTest.setName("测试");
+        userTestMapper.insert(userTest);
     }
 }
