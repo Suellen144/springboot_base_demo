@@ -2,7 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.UserMapper">
 
+    <resultMap id="saleUserResult" type="com.example.demo.entity.User">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="deptId" column="dept_id" />
+        <result property="phone" column="phone" />
+        <result property="age" column="age" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="deleted" column="deleted" />
+        <result property="version" column="version" />
+        <association property="dept" column="dept_id"
+                     javaType="com.example.demo.entity.Dept" select="selectDeptById" />
+    </resultMap>
+
+
     <select id="selectUserById" resultType="com.example.demo.entity.User">
         select * from user where id = #{id}
+    </select>
+    <select id="selectUserByCondition" resultMap="saleUserResult">
+        SELECT * FROM user
+        WHERE 1=1
+        <if test="age != null and age != ''">
+            AND age = #{age}
+        </if>
+        <if test="name != null and name != ''">
+            AND NAME LIKE CONCAT('%',#{name},'%')
+        </if>
+        <if test="phone != null and phone != ''">
+            and phone = #{phone}
+        </if>
+    </select>
+
+    <select id="selectUserByCondition2" resultMap="saleUserResult">
+        SELECT * FROM user left join dept on user.dept_id = dept.id
+        WHERE 1=1
+        <if test="name != null and name != ''">
+            AND user.NAME LIKE CONCAT('%',#{name},'%')
+        </if>
+        <if test="phone != null and phone != ''">
+            and user.phone = #{phone}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            and dept.dept_name = #{deptName}
+        </if>
+    </select>
+
+    <select id="selectDeptById" resultType="com.example.demo.entity.Dept">
+        select * from dept where id = #{id}
+    </select>
+
+    <select id="selectUserByCondition3" resultMap="saleUserResult">
+        SELECT * FROM user left join dept on user.dept_id = dept.id
+        ${ew.customSqlSegment}
     </select>
 </mapper>

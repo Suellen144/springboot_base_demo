@@ -4,6 +4,7 @@ import com.example.demo.annotation.AopAnnotation;
 import com.example.demo.entity.AopDemo;
 import com.example.demo.entity.Dept;
 import com.example.demo.entity.User;
+import com.example.demo.entity.UserTest;
 import com.example.demo.enums.AopEnum;
 import com.example.demo.mapper.AopDemoMapper;
 import com.example.demo.service.AopDemoService;
@@ -32,11 +33,10 @@ public class AopTest {
     AopDemoMapper aopDemoMapper;
 
     @Pointcut("@annotation(com.example.demo.annotation.AopAnnotation)")
-    public void aopPoint() {
-    }
+    public void aopPoint() {}
 
     @AfterReturning(value = "aopPoint()",returning= "id")
-    public void aopPoints(JoinPoint point ,Integer id) {
+    public void aopPoints(JoinPoint point ,Object id) {
         MethodSignature signature = (MethodSignature)point.getSignature();
         AopAnnotation aopAnnotation = signature.getMethod().getAnnotation(AopAnnotation.class);
         Object arg = point.getArgs()[0];
@@ -49,7 +49,9 @@ public class AopTest {
                 CompletableFuture.runAsync(() -> {
                     addAopDemo(aopEnum.type,desc);
                 });
-                System.out.println("id:"+id);
+                System.out.println("int ->id:"+Integer.parseInt(id.toString()));
+                System.out.println("Object ->id:"+id);
+                System.out.println("Object ->type:"+id.getClass().toString());
                 break;
             case TWO_DEMO:
                 Dept dept =  (Dept) arg;
@@ -58,9 +60,19 @@ public class AopTest {
                 CompletableFuture.runAsync(() -> {
                     addAopDemo(aopEnum.type,format);
                 });
-                System.out.println("id:"+id);
+                System.out.println("int ->id:"+Integer.parseInt(id.toString()));
+                System.out.println("Object ->id:"+id);
                 break;
             case THREE_DEMO:
+                UserTest userTest =  (UserTest) arg;
+                String strFormat = String.format(aopEnum.desc, userTest.getName());
+
+                CompletableFuture.runAsync(() -> {
+                    addAopDemo(aopEnum.type,strFormat);
+                });
+                System.out.println("String ->id:"+id.toString());
+                System.out.println("Object ->id:"+id);
+                System.out.println("Object ->type:"+id.getClass().toString());
                 break;
             default:
                 break;

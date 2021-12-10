@@ -46,12 +46,10 @@ public class EasyPoiController {
 
         System.out.println("开始导出");
         // 模拟从数据库获取需要导出的数据 (偷懒，嘻嘻！)
-        List<User> personList = userMapper.selectList(null);
+        List<User> personList = userService.selectUserByCondition(new User());
         // 设置序号（将id字段作为序号，导出后实现序号递增）
         for (User user : personList) {
             user.setId(serialNumber++);
-            Dept dept = deptMapper.selectById(user.getDeptId());
-            user.setDeptName(dept.getDeptName());
             //serialNumber++;
         }
         // 导出操作

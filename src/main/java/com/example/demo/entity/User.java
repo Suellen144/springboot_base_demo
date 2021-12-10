@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.Version;
@@ -46,13 +47,13 @@ public class User implements Serializable {
     @ApiModelProperty(value = "名字")
     private String name;
 
-    @Excel(name = "部门Id" ,orderNum = "1", width = 30)
     @ApiModelProperty(value = "部门id")
     private Integer deptId;
 
-    @Excel(name = "部门名称" ,orderNum = "2", width = 30)
-    @ApiModelProperty(value = "部门名称")
-    private String deptName;
+    @ApiModelProperty(value = "所属部门")
+    @ExcelEntity(name = "所属部门", show = false)
+    @TableField(exist = false)
+    private Dept dept;
 
     @Excel(name = "年龄" ,orderNum = "3", width = 30)
     @ApiModelProperty(value = "年龄")

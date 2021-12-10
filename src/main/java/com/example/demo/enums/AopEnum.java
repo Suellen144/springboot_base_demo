@@ -10,9 +10,9 @@ package com.example.demo.enums;
  **/
 public enum AopEnum {
 
-    ONE_DEMO("ONE_DEMO","用户", "用户姓名:,%s,年龄:,%s,电话:,%s"),
-    TWO_DEMO("TWO_DEMO","部门", "部门名称:,%s,部门地址:,%s"),
-    THREE_DEMO("THREE_DEMO","dd", "奥迪");
+    ONE_DEMO("ONE_DEMO","用户", "用户姓名: %s,年龄:,%s,电话:,%s"),
+    TWO_DEMO("TWO_DEMO","部门", "部门名称: %s,部门地址:,%s"),
+    THREE_DEMO("THREE_DEMO","用户测试", "用户姓名: %s");
 
     /**编码*/
     public String code;

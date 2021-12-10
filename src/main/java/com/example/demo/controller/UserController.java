@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.annotation.AopAnnotation;
 import com.example.demo.common.CommonResult;
@@ -10,16 +9,16 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.AopEnum;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
-import com.example.demo.utils.ObjectToBeanUtils;
 import com.example.demo.utils.RedisUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
+import org.apache.tomcat.util.buf.UEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -88,6 +87,51 @@ public class UserController {
     public Boolean updateUserById(@RequestParam Integer id){
         System.out.println(userService.updateUserById(id));
         return userService.updateUserById(id);
+    }
+
+    @GetMapping("/selectUserByCondition")
+    @ApiOperation(value = "条件查询所有",notes = "条件查询所有")
+    public CommonResult<List<User>> selectUserByCondition(@RequestBody User user){
+        List<User> user1 = userService.selectUserByCondition(user);
+        return new CommonResult<>(200,"测试",user1);
+    }
+
+    @GetMapping("/selectUserByCondition2")
+    @ApiOperation(value = "条件查询所有2",notes = "条件查询所有2")
+    public CommonResult<List<User>> selectUserByCondition2(
+            @RequestParam("name") String name,
+            @RequestParam("phone") String phone,
+            @RequestParam("deptName") String deptName){
+        List<User> user = userService.selectUserByCondition2(name,phone,deptName);
+        return new CommonResult<>(200,"测试",user);
+    }
+
+    @GetMapping("/selectUserByCondition3")
+    @ApiOperation(value = "条件查询所有3",notes = "条件查询所有3")
+    public CommonResult<List<User>> selectUserByCondition3(
+            @RequestParam("name") String name,
+            @RequestParam("phone") String phone,
+            @RequestParam("deptName") String deptName){
+        List<User> user = userService.selectUserByCondition3(name,phone,deptName);
+        return new CommonResult<>(200,"测试",user);
+    }
+
+
+    @GetMapping("/selectUserByCondition4")
+    @ApiOperation(value = "条件查询所有4",notes = "条件查询所有4")
+    public CommonResult<List<User>> selectUserByCondition4(@RequestParam Map<String, Object> map){
+        List<User> user = userService.selectUserByCondition3
+                (map.get("name").toString(),map.get("phone").toString(),map.get("deptName").toString());
+        return new CommonResult<>(200,"测试",user);
+    }
+
+    @GetMapping("/selectUserByCondition5/{name}/{phone}/{deptName}")
+    @ApiOperation(value = "条件查询所有5",notes = "条件查询所有5")
+    public CommonResult<List<User>> selectUserByCondition5
+            (@PathVariable String name, @PathVariable String phone, @PathVariable String deptName){
+        List<User> user = userService.selectUserByCondition3
+                (name,phone,deptName);
+        return new CommonResult<>(200,"测试",user);
     }
 }
 
