@@ -131,8 +131,6 @@ public class UserController {
             (@PathVariable String name, @PathVariable String phone, @PathVariable String deptName){
         List<User> user = userService.selectUserByCondition3
                 (name,phone,deptName);
-
-
         return new CommonResult<>(200,"测试",user);
     }
 }
