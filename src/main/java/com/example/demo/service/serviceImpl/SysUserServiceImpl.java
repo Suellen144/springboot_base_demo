@@ -39,7 +39,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      *用于生成短信验证码存到redis时作为key的标识符*/
     private final String MESSAGE_CODE = "messageCode_";
     /**
-     *短信验证码生成次数统计*/
+     *短信验证码生成次数统计存到redis时作为key的标识符*/
     private final String MESSAGE_SUM = "sum_";
     /**
      *短信验证码生成次数限制次数*/
