@@ -69,6 +69,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         queryWrapper.last("order by user.id desc");
 
-        return userMapper.selectUserByCondition3(queryWrapper);
+        Page<User> page = new Page<>(1 ,1000);
+        if (page.getSize() > 500) {
+            String str = "limit %s offset %s";
+            String lastLimit = String.format(str, page.getSize(),
+                    (page.getCurrent() - 1) * page.getSize());
+            queryWrapper.last(lastLimit);
+            page.setSize(-1);
+        }
+
+        return userMapper.selectUserByCondition3(page,queryWrapper);
     }
 }

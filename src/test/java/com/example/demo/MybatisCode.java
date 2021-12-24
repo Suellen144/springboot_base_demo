@@ -56,7 +56,7 @@ public class MybatisCode {
 
         //策略配置
         StrategyConfig sc = new StrategyConfig();
-        sc.setInclude("user_test");
+        sc.setInclude("attachment_info");
         sc.setNaming(NamingStrategy.underline_to_camel);
         sc.setColumnNaming(NamingStrategy.underline_to_camel);
         sc.setEntityLombokModel(true);

@@ -20,6 +20,7 @@ import com.example.demo.mapper.UserMapper;
 import com.example.demo.mapper.UserTestMapper;
 import com.example.demo.utils.SnowFlakeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
@@ -138,5 +139,16 @@ public class DateTest {
         UserTest userTest = new UserTest();
         userTest.setName("测试");
         userTestMapper.insert(userTest);
+    }
+
+    @Test
+    public void nullTest() {
+        if(StringUtils.isBlank(null+"")){
+            System.out.println(123);
+        }
+        if(StringUtils.equals("null",null+"")){
+            System.out.println(456);
+        }
+        System.out.println(null+"");
     }
 }

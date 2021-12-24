@@ -24,7 +24,7 @@ import javax.annotation.Resource;
  * @since 2021-11-20
  */
 @RestController
-@RequestMapping("/aop-demo")
+@RequestMapping("/aopDemo")
 public class AopDemoController {
 
     @Resource
@@ -36,6 +36,5 @@ public class AopDemoController {
         aopDemoMapper.insert(aopDemo);
         return aopDemo.getId();
     }
-
 }
 

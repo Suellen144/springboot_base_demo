@@ -12,7 +12,7 @@ spring:
   #数据连接
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/springboot_base_demo?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/springboot_base_demo?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&useAffectedRows=true
     username: root
     password: root
     type: com.alibaba.druid.pool.DruidDataSource
