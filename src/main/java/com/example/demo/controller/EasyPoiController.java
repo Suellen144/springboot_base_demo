@@ -3,12 +3,11 @@ package com.example.demo.controller;
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
-import com.example.demo.entity.Dept;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.DeptMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
-import com.example.demo.utils.ExcelUtils;
+import com.example.demo.utils.ExcelPoiUtils;
 import com.example.demo.utils.PoiUtils;
 import io.swagger.annotations.ApiOperation;
 
@@ -41,7 +40,7 @@ public class EasyPoiController {
 
     /**导出*/
     @GetMapping(value = "/exportExcel")
-    @ApiOperation(value = "导出事故信息")
+    @ApiOperation(value = "导出")
     public void export(HttpServletResponse response){
 
         System.out.println("开始导出");
@@ -53,7 +52,7 @@ public class EasyPoiController {
             //serialNumber++;
         }
         // 导出操作
-        ExcelUtils.exportExcel(personList, "easyPoi导出功能(用户表)", "导出sheet1", User.class, "测试User.xls", response);
+        ExcelPoiUtils.exportExcel(personList, "easyPoi导出功能(用户表)", "导出sheet1", User.class, "测试User.xls", response);
     }
 
 

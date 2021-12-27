@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
  * @Date 2021/11/19 22:35
  * @Version 1.0
  **/
-public class ExcelUtils {
+public class ExcelPoiUtils {
     public static void exportExcel(List<?> list, String title, String sheetName, Class<?> pojoClass, String fileName,
                                    boolean isCreateHeader, HttpServletResponse response) {
         ExportParams exportParams = new ExportParams(title, sheetName);
