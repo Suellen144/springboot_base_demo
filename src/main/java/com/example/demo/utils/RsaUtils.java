@@ -17,7 +17,7 @@ import java.util.Map;
  * @Author: Suellen
  * @CreateDate: 2021/12/20 9:22
  */
-public class RsaUtil {
+public class RsaUtils {
     private static final String ALGO ="RSA";
     private static final String CHARSET ="UTF-8";
 

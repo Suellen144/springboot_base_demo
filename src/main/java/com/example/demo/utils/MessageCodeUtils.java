@@ -9,7 +9,7 @@ import java.util.Random;
  * @Author: Suellen
  * @CreateDate: 2021/12/21 15:34
  */
-public class MessageCodeUtil {
+public class MessageCodeUtils {
 
     /**
      * 随机生成六位数短信

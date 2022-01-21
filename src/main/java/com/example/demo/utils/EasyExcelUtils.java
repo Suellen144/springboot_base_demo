@@ -13,6 +13,7 @@ import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.fastjson.JSON;
+import com.example.demo.common.HttpStatus;
 import com.example.demo.listener.DefaultExcelListener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.formula.functions.T;
@@ -36,7 +37,7 @@ import java.util.Set;
  * @Author: Suellen
  * @CreateDate: 2021/12/27 10:00
  */
-public class EasyExcelUtil {
+public class EasyExcelUtils {
 
     /**
      * 同步无模型读（默认读取sheet0,从第2行开始读）
@@ -428,9 +429,9 @@ public class EasyExcelUtil {
     }
 
 
-    // 请求成功返回状态码
-    private static final int RESPONSE_SUCCESS_CODE = 200;
 
+
+    /** ===================================================================================================== **/
     /**
      *  通用导出
      * @param list 数据集合
@@ -445,9 +446,6 @@ public class EasyExcelUtil {
             e.printStackTrace();
         }
     }
-
-
-
 
     /**
      * 导出
@@ -487,7 +485,7 @@ public class EasyExcelUtil {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf8");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
-        response.setStatus(RESPONSE_SUCCESS_CODE);
+        response.setStatus(HttpStatus.SUCCESS);
         return response.getOutputStream();
     }
 

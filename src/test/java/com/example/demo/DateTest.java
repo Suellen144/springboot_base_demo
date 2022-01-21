@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -150,5 +151,9 @@ public class DateTest {
             System.out.println(456);
         }
         System.out.println(null+"");
+        //时间戳
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        System.out.println(timestamp.toString());
     }
 }

@@ -4,9 +4,11 @@ import com.example.demo.common.R;
 import com.example.demo.entity.SysUser;
 import com.example.demo.service.SysUserService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 
 /**
  * <p>
@@ -18,6 +20,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/sysUser")
+@Validated
 public class SysUserController {
 
     @Resource
@@ -29,7 +32,7 @@ public class SysUserController {
      */
     @PostMapping("/register")
     @ApiOperation(value = "用户注册",notes = "用户注册")
-    public R register(@RequestBody SysUser sysUser){
+    public R register(@RequestBody @Validated SysUser sysUser){
         return sysUserService.register(sysUser);
     }
 
@@ -39,7 +42,7 @@ public class SysUserController {
      */
     @PostMapping("/login")
     @ApiOperation(value = "用户登录",notes = "用户登录")
-    public R login(@RequestBody SysUser sysUser){
+    public R login(@RequestBody @Validated SysUser sysUser){
         return sysUserService.login(sysUser);
     }
 
@@ -49,7 +52,7 @@ public class SysUserController {
      */
     @PostMapping("/getMessageCode")
     @ApiOperation(value = "生成六位数短信验证码",notes = "生成六位数短信验证码")
-    public R getMessageCode(@RequestParam("phone") String phone){
+    public R getMessageCode(@RequestParam("phone") @NotBlank(message = "手机号码不能为空")String phone){
         return sysUserService.getMessageCode(phone);
     }
 
@@ -60,8 +63,8 @@ public class SysUserController {
      */
     @PostMapping("/verifyPhoneAndMessageCode")
     @ApiOperation(value = "校验手机号和短信验证码",notes = "校验手机号和短信验证码")
-    public R verifyPhoneAndMessageCode(@RequestParam("phone") String phone,
-                                       @RequestParam("messageCode") String messageCode){
+    public R verifyPhoneAndMessageCode(@RequestParam("phone") @NotBlank(message = "手机号码不能为空")String phone,
+                                       @RequestParam("messageCode") @NotBlank(message = "请输入短信验证码")String messageCode){
         return sysUserService.verifyPhoneAndMessageCode(phone,messageCode);
     }
 
@@ -72,8 +75,8 @@ public class SysUserController {
      */
     @PostMapping("/resetPassword")
     @ApiOperation(value = "重置密码",notes = "重置密码")
-    public R resetPassword(@RequestParam("phone") String phone,
-                           @RequestParam("newPassword") String newPassword){
+    public R resetPassword(@RequestParam("phone")  @NotBlank(message = "手机号码不能为空")String phone,
+                           @RequestParam("newPassword")  @NotBlank(message = "新密码不能为空")String newPassword){
         return sysUserService.resetPassword(phone,newPassword);
     }
 
@@ -85,9 +88,9 @@ public class SysUserController {
      */
     @PostMapping("/updatePassword")
     @ApiOperation(value = "修改密码",notes = "修改密码")
-    public R updatePassword(@RequestParam("userId") String userId,
-                            @RequestParam("newPassword") String newPassword,
-                            @RequestParam("oldPassword") String oldPassword){
+    public R updatePassword( @RequestParam("userId") @NotBlank(message = "用户id不能为空")String userId,
+                            @RequestParam("newPassword") @NotBlank(message = "新密码不能为空")String newPassword,
+                            @RequestParam("oldPassword") @NotBlank(message = "旧密码不能为空")String oldPassword){
         return sysUserService.updatePassword(userId,newPassword,oldPassword);
     }
 
@@ -99,9 +102,9 @@ public class SysUserController {
      */
     @PostMapping("/updatePhone")
     @ApiOperation(value = "修改手机号码",notes = "修改手机号码")
-    public R updatePhone(   @RequestParam("userId") String userId,
-                            @RequestParam("newPhone") String newPhone,
-                            @RequestParam("oldPhone") String oldPhone){
+    public R updatePhone(   @RequestParam("userId") @NotBlank(message = "用户id不能为空")String userId,
+                            @RequestParam("newPhone") @NotBlank(message = "新手机号不能为空")String newPhone,
+                            @RequestParam("oldPhone") @NotBlank(message = "旧手机号不能为空")String oldPhone){
         return sysUserService.updatePhone(userId,newPhone,oldPhone);
     }
 

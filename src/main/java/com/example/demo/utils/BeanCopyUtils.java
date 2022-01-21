@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * @Author: Suellen
  * @CreateDate: 2021/12/21 9:17
  */
-public class BeanCopyUtil extends BeanUtils {
+public class BeanCopyUtils extends BeanUtils {
 
     /**
      * 集合数据的拷贝

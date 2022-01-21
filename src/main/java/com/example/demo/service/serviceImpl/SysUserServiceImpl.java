@@ -1,24 +1,31 @@
 package com.example.demo.service.serviceImpl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.common.HttpMessage;
 import com.example.demo.common.HttpStatus;
 import com.example.demo.common.R;
 import com.example.demo.entity.SysUser;
 import com.example.demo.mapper.SysUserMapper;
 import com.example.demo.service.SysUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.utils.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.record.DVALRecord;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+
+/**
+ *  在项目中，@Transactional(rollbackFor=Exception.class)，
+ *  如果类加了这个注解，那么这个类里面的方法抛出异常，就会回滚，数据库里面的数据也会回滚
+ *  在@Transactional注解中如果不配置rollbackFor属性,
+ *  那么事物只会在遇到RuntimeException的时候才会回滚,
+ *  加上rollbackFor=Exception.class,可以让事物在遇到非运行时异常时也回滚
+ */
 /**
  * <p>
  * 用户表 服务实现类
@@ -28,6 +35,7 @@ import java.util.Objects;
  * @since 2021-12-21
  */
 @Service
+@Transactional(rollbackFor=Exception.class)
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
     @Resource
@@ -69,7 +77,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if(StringUtils.isBlank(sysUser.getPassword())) {
             return R.error(HttpStatus.ERROR,"用户密码不能为空");
         }
-        if(!RegularCheckUtil.checkPassWord(sysUser.getPassword())){
+        if(!RegularCheckUtils.checkPassWord(sysUser.getPassword())){
             return R.error(HttpStatus.ERROR,"口令长度大于等于8位且为数字、字母、特殊字符2种及以上组合的");
         }
 
@@ -86,13 +94,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if(StringUtils.isBlank(sysUser.getEmail())) {
             return R.error(HttpStatus.ERROR,"用户邮箱不能为空");
         }
-        if(!RegularCheckUtil.checkEmail(sysUser.getEmail())){
+        if(!RegularCheckUtils.checkEmail(sysUser.getEmail())){
             return R.error(HttpStatus.ERROR,"邮箱格式错误");
         }
         if(StringUtils.isBlank(sysUser.getPhone())) {
             return R.error(HttpStatus.ERROR,"手机号码不能为空");
         }
-        if(!RegularCheckUtil.checkPhone(sysUser.getPhone())){
+        if(!RegularCheckUtils.checkPhone(sysUser.getPhone())){
             return R.error(HttpStatus.ERROR,"手机号码格式错误");
         }
         if(sysUser.getType() == null) {
@@ -120,12 +128,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return R.error(HttpStatus.ERROR,"该手机号已经被注册");
         }
 
-        sysUser.setPassword(EncryptionUtil.encryption(sysUser.getPassword()));
+        sysUser.setPassword(EncryptionUtils.encryption(sysUser.getPassword()));
         sysUser.setLastUpdatePasswordTime(new Date());
 
         sysUserMapper.insert(sysUser);
 
-        return R.ok();
+        return R.ok(HttpStatus.SUCCESS,"注册成功");
     }
 
     /**
@@ -159,14 +167,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return R.error(HttpStatus.ERROR,"账号密码错误,请重新输入");
         }
 
-        String encryption = EncryptionUtil.encryption(sysUser.getPassword());
+        String encryption = EncryptionUtils.encryption(sysUser.getPassword());
         if(!encryption.equals(user.getPassword())){
             redisUtils.incr(sysUser.getAccount(),1);
             return R.error(HttpStatus.ERROR,"账号密码错误,请重新输入");
         }
 
         user.setPassword(null);
-        String token = JwtUtil.generateJwt(user);
+        String token = JwtUtils.generateJwt(user);
         user.setToken(token);
         redisUtils.del(sysUser.getAccount());
         redisUtils.set(user.getUserId(),token,900);
@@ -179,16 +187,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R getMessageCode(String phone) {
-        if(StringUtils.isBlank(phone)) {
-            return R.error(HttpStatus.ERROR,"手机号码不能为空");
-        }
-        if(!RegularCheckUtil.checkPhone(phone)){
+        if(!RegularCheckUtils.checkPhone(phone)){
             return R.error(HttpStatus.ERROR,"手机号码格式错误");
         }
         try {
             boolean hasKey = redisUtils.hasKey(MESSAGE_CODE + phone);
             if(!hasKey){
-                String messageAuthCode = MessageCodeUtil.getMessageAuthCode();
+                String messageAuthCode = MessageCodeUtils.getMessageAuthCode();
                 redisUtils.set(MESSAGE_CODE + phone,messageAuthCode,1800);
                 redisUtils.set(MESSAGE_SUM + phone,1,900);
                 return R.ok(HttpStatus.SUCCESS,HttpMessage.SUCCESS,messageAuthCode);
@@ -215,14 +220,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R verifyPhoneAndMessageCode(String phone, String messageCode) {
-        if(StringUtils.isBlank(phone)) {
-            return R.error(HttpStatus.ERROR,"手机号码不能为空");
-        }
-        if(!RegularCheckUtil.checkPhone(phone)){
+        if(!RegularCheckUtils.checkPhone(phone)){
             return R.error(HttpStatus.ERROR,"手机号码格式错误");
-        }
-        if(StringUtils.isBlank(messageCode)) {
-            return R.error(HttpStatus.ERROR,"请输入短信验证码");
         }
         if(!verifyMessageCode(phone,messageCode)) {
             return R.error(HttpStatus.ERROR,"短信验证码校验失败");
@@ -237,27 +236,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R resetPassword(String phone, String newPassword) {
-        if(StringUtils.isBlank(phone)) {
-            return R.error(HttpStatus.ERROR,"手机号码不能为空");
-        }
-        if(!RegularCheckUtil.checkPhone(phone)){
+        if(!RegularCheckUtils.checkPhone(phone)){
             return R.error(HttpStatus.ERROR,"手机号码格式错误");
         }
-        if(StringUtils.isBlank(newPassword)){
-            return R.error(HttpStatus.ERROR,"新密码不能为空");
-        }
-        if(!RegularCheckUtil.checkPassWord(newPassword)){
+        if(!RegularCheckUtils.checkPassWord(newPassword)){
             return R.error(HttpStatus.ERROR,"口令长度大于等于8位且为数字、字母、特殊字符2种及以上组合的");
         }
 
         SysUser sysUser = new SysUser();
-        sysUser.setPassword(EncryptionUtil.encryption(newPassword));
+        sysUser.setPassword(EncryptionUtils.encryption(newPassword));
         sysUser.setLastUpdatePasswordTime(new Date());
         int update = sysUserMapper.update(sysUser, new QueryWrapper<SysUser>().eq("phone", phone));
         if(update<=0){
             return R.error(HttpStatus.ERROR,"找不到匹配的数据，请检查手机号是否输入正确");
         }
-        return R.ok(HttpStatus.SUCCESS,"修改成功");
+        return R.ok(HttpStatus.SUCCESS,"重置密码成功");
     }
 
     /**
@@ -268,28 +261,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R updatePassword(String userId, String newPassword, String oldPassword) {
-        if(StringUtils.isBlank(userId)) {
-            return R.error(HttpStatus.ERROR,"用户id不能为空");
-        }
-        if(StringUtils.isBlank(oldPassword)){
-            return R.error(HttpStatus.ERROR,"旧密码不能为空");
-        }
-        if(StringUtils.isBlank(newPassword)){
-            return R.error(HttpStatus.ERROR,"新密码不能为空");
-        }
-        if(!RegularCheckUtil.checkPassWord(newPassword)){
+        if(!RegularCheckUtils.checkPassWord(newPassword)){
             return R.error(HttpStatus.ERROR,"口令长度大于等于8位且为数字、字母、特殊字符2种及以上组合的");
         }
 
         SysUser sysUser = new SysUser();
-        sysUser.setPassword(EncryptionUtil.encryption(newPassword));
+        sysUser.setPassword(EncryptionUtils.encryption(newPassword));
         sysUser.setLastUpdatePasswordTime(new Date());
         int update = sysUserMapper.update(sysUser, new QueryWrapper<SysUser>()
-                .eq("user_id", userId).eq("password",EncryptionUtil.encryption(oldPassword)));
+                .eq("user_id", userId).eq("password", EncryptionUtils.encryption(oldPassword)));
         if(update<=0){
             return R.error(HttpStatus.ERROR,"找不到匹配的数据，请检查手机号和旧密码是否输入正确");
         }
-        return R.ok(HttpStatus.SUCCESS,"修改成功");
+        return R.ok(HttpStatus.SUCCESS,"修改密码成功");
     }
 
 
@@ -301,16 +285,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R updatePhone(String userId, String newPhone, String oldPhone) {
-        if(StringUtils.isBlank(userId)) {
-            return R.error(HttpStatus.ERROR,"用户id不能为空");
-        }
-        if(!RegularCheckUtil.checkPhone(newPhone)){
-            return R.error(HttpStatus.ERROR,"新手机号不能为空");
-        }
-        if(!RegularCheckUtil.checkPhone(oldPhone)){
-            return R.error(HttpStatus.ERROR,"旧手机号不能为空");
-        }
-
         SysUser sysUser = new SysUser();
         sysUser.setPhone(newPhone);
         int update = sysUserMapper.update(sysUser, new QueryWrapper<SysUser>()

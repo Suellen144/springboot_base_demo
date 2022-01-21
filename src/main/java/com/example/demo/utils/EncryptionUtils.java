@@ -9,7 +9,7 @@ import java.util.Base64;
  * @Author: Suellen
  * @CreateDate: 2021/12/21 14:21
  */
-public class EncryptionUtil {
+public class EncryptionUtils {
 
     public static String encryption(String password){
         return Base64.getEncoder().encodeToString(password.getBytes());

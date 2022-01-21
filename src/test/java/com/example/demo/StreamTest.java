@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.example.demo.entity.User;
 import com.example.demo.entity.UserTest;
 import com.example.demo.mapper.UserMapper;
@@ -9,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Description: Stream测试
@@ -67,5 +68,34 @@ public class StreamTest {
         List<UserTest> userTests = userTestMapper.selectList(null);
         System.out.println(userTests);
         System.out.println(userTests.get(0));
+    }
+
+    @Test
+    public void Test5(){
+        List<User> list = new LambdaQueryChainWrapper<>(userMapper).eq(User::getPhone,"123456").list();
+        System.out.println("+++"+list.toString());
+
+        User one = new LambdaQueryChainWrapper<>(userMapper).eq(User::getId,30).one();
+        System.out.println("---"+one);
+
+        User id = new QueryChainWrapper<>(userMapper).eq("id", 30).one();
+        System.out.println("id"+id);
+
+        List<User> list1 = new LambdaQueryChainWrapper<>(userMapper).select(User::getName).eq(User::getPhone, "123456").list();
+        System.out.println("==="+list1.toString());
+
+        String name = new LambdaQueryChainWrapper<>(userMapper).select(User::getName).eq(User::getPhone, "123456").list()+"";
+        System.out.println("***"+name);
+    }
+
+    @Test
+    public void Test6(){
+        long aa = 022333;
+        System.out.println(00);
+        System.out.println(aa++);
+        System.out.println(Integer.parseInt("022333"));
+        int i = Integer.parseInt("022333");
+        i++;
+        System.out.println(i);
     }
 }

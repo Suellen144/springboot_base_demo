@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @Author: Suellen
  * @CreateDate: 2021/12/20 9:39
  */
-public class RegularCheckUtil {
+public class RegularCheckUtils {
 
     /**
      *邮箱验证*/

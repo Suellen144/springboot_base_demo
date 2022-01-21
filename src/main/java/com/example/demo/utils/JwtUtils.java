@@ -16,7 +16,7 @@ import java.util.HashMap;
  * @Author: Suellen
  * @CreateDate: 2021/12/20 15:00
  */
-public class JwtUtil {
+public class JwtUtils {
 
     /**
      * 签名使用的秘钥

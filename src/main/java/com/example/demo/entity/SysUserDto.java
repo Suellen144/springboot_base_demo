@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
@@ -18,17 +17,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p>
- * 用户表
- * </p>
- *
- * @author zhk
- * @since 2021-12-21
+ * @Description:
+ * @ProjectName: springboot-base-demo
+ * @Package: com.example.demo.entity
+ * @Author: Suellen
+ * @CreateDate: 2022/1/19 14:15
  */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +35,7 @@ import java.util.Date;
 @ExcelIgnoreUnannotated //忽视无注解的属性
 @ContentRowHeight(20) //文本高度
 @HeadRowHeight(20) //标题高度
-public class SysUser implements Serializable {
+public class SysUserDto {
 
     private static final long serialVersionUID = 1L;
 
@@ -91,10 +89,6 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "是否锁定(0:否;1:是)")
     private Integer isLock;
 
-    @ExcelIgnore
-    @ApiModelProperty(value = "安全符")
-    private String salt;
-
     @ColumnWidth(20)
     @ExcelProperty(value = {"用户信息","创建时间"},index = 10)
     @ApiModelProperty(value = "创建时间")
@@ -120,20 +114,4 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "是否删除 0：否；1：是")
     @TableLogic
     private Integer deleted;
-
-    @ColumnWidth(20)
-    @ExcelProperty(value = {"用户信息","版本"},index = 14)
-    @ApiModelProperty(value = "版本号，乐观锁")
-    @Version
-    private Integer version;
-
-    @ApiModelProperty(value = "token")
-    @TableField(exist = false)
-    @ExcelIgnore
-    private String token;
-
-    @ApiModelProperty(value = "短信验证码")
-    @TableField(exist = false)
-    @ExcelIgnore
-    private String messageAuthCode;
 }
