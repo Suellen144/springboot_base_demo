@@ -1,7 +1,7 @@
 package com.example.demo.common;
 
 /**
- * @Description: 分组校验
+ * @Description: Validated分组校验
  * @ProjectName: springboot-base-demo
  * @Package: com.example.demo.common
  * @Author: Suellen
@@ -21,9 +21,9 @@ public class ValidatedGroups {
     public interface Delete{
     }
 
-    public interface login{
+    public interface Login{
     }
 
-    public interface register{
+    public interface Register{
     }
 }

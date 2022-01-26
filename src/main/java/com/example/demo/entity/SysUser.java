@@ -58,13 +58,13 @@ public class SysUser implements Serializable {
     @ColumnWidth(20)
     @ExcelProperty(value = {"用户信息","账号"},index = 2)
     @ApiModelProperty(value = "用户账号")
-    @NotEmpty(message = "用户账号不能为空", groups = {ValidatedGroups.login.class})
+    @NotEmpty(message = "用户账号不能为空", groups = {ValidatedGroups.Login.class})
     private String account;
 
     @ColumnWidth(20)
     @ExcelProperty(value = {"用户信息","密码"},index = 3)
     @ApiModelProperty(value = "账号密码")
-    @NotEmpty(message = "账号密码不能为空", groups = {ValidatedGroups.login.class})
+    @NotEmpty(message = "账号密码不能为空", groups = {ValidatedGroups.Login.class})
     private String password;
 
     @ColumnWidth(20)

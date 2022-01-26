@@ -43,7 +43,7 @@ public class SysUserController {
      */
     @PostMapping("/login")
     @ApiOperation(value = "用户登录",notes = "用户登录")
-    public R login(@RequestBody @Validated(ValidatedGroups.login.class) SysUser sysUser){
+    public R login(@RequestBody @Validated(ValidatedGroups.Login.class) SysUser sysUser){
         return sysUserService.login(sysUser);
     }
 
