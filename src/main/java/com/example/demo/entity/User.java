@@ -39,6 +39,7 @@ public class User implements Serializable {
     private Integer id;
 
     @Excel(name = "名字" ,orderNum = "0", width = 30)
+    //@Excel(name = "性别", orderNum = "0",replace = { "男生_boy", "女生_girl" })
     @ApiModelProperty(value = "名字")
     private String name;
 

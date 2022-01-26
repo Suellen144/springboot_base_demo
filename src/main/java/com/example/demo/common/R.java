@@ -53,18 +53,18 @@ public class R extends HashMap<String,Object> {
         return r;
     }
     public static R ok(int code,String msg,Object obj) {
-        Map map = new HashMap<>(3);
-        map.put(CODE,code);
-        map.put(MSG,msg);
-        map.put(DATA,obj);
-        return R.ok(map);
+        R r = new R();
+        r.put(CODE, code);
+        r.put(MSG,msg);
+        r.put(DATA,obj);
+        return r;
     }
 
     public static R ok(int code,String msg) {
-        Map map = new HashMap<>(2);
-        map.put(CODE,code);
-        map.put(MSG,msg);
-        return R.ok(map);
+        R r = new R();
+        r.put(CODE, code);
+        r.put(MSG,msg);
+        return r;
     }
 
     public static R ok(){

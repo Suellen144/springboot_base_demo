@@ -69,7 +69,6 @@ public class ExceptionHandlerLocal {
     public R missingServletRequestParameterException(MissingServletRequestParameterException e) {
         return R.error(HttpStatus.ERROR,"参数错误",e.getMessage());
     }
-
     /**
      * 处理请求参数格式错误 @RequestBody上validate失败后抛出的异常是MethodArgumentNotValidException异常。
      *

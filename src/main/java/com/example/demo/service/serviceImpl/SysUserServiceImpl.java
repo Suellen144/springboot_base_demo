@@ -65,23 +65,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R register(SysUser sysUser) {
-        if(Objects.isNull(sysUser)) {
-            return R.error(HttpStatus.ERROR,"用户对象不能为空");
-        }
-        if(StringUtils.isBlank(sysUser.getAccount())) {
-            return R.error(HttpStatus.ERROR,"用户账号不能为空");
-        }
-        if(StringUtils.isBlank(sysUser.getName())) {
-            sysUser.setName(sysUser.getAccount());
-        }
-        if(StringUtils.isBlank(sysUser.getPassword())) {
-            return R.error(HttpStatus.ERROR,"用户密码不能为空");
-        }
-        if(!RegularCheckUtils.checkPassWord(sysUser.getPassword())){
-            return R.error(HttpStatus.ERROR,"口令长度大于等于8位且为数字、字母、特殊字符2种及以上组合的");
-        }
 
-       /* try {
+         /* try {
             //解密密码
             String password = RsaUtil.decrypt(sysUser.getPassword());
             sysUser.setPassword(password);
@@ -91,26 +76,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return R.error(HttpStatus.ERROR,"密码解密失败");
         }*/
 
-        if(StringUtils.isBlank(sysUser.getEmail())) {
-            return R.error(HttpStatus.ERROR,"用户邮箱不能为空");
+        if(StringUtils.isBlank(sysUser.getName())) {
+            sysUser.setName(sysUser.getAccount());
         }
-        if(!RegularCheckUtils.checkEmail(sysUser.getEmail())){
-            return R.error(HttpStatus.ERROR,"邮箱格式错误");
-        }
-        if(StringUtils.isBlank(sysUser.getPhone())) {
-            return R.error(HttpStatus.ERROR,"手机号码不能为空");
-        }
-        if(!RegularCheckUtils.checkPhone(sysUser.getPhone())){
-            return R.error(HttpStatus.ERROR,"手机号码格式错误");
-        }
-        if(sysUser.getType() == null) {
-            return R.error(HttpStatus.ERROR,"无法识别要注册的用户类型");
-        }
-        if(sysUser.getGender() == null) {
-            return R.error(HttpStatus.ERROR,"用户性别不能为空");
-        }
-        if(StringUtils.isBlank(sysUser.getMessageAuthCode())) {
-            return R.error(HttpStatus.ERROR,"请输入短信验证码");
+        if(!RegularCheckUtils.checkPassWord(sysUser.getPassword())){
+            return R.error(HttpStatus.ERROR,"口令长度大于等于8位且为数字、字母、特殊字符2种及以上组合的");
         }
         if(!verifyMessageCode(sysUser.getPhone(),sysUser.getMessageAuthCode())) {
             return R.error(HttpStatus.ERROR,"短信验证码校验失败");
@@ -142,16 +112,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public R login(SysUser sysUser) {
-        if(Objects.isNull(sysUser)) {
-            return R.error(HttpStatus.ERROR,"用户对象不能为空");
-        }
-        if(StringUtils.isBlank(sysUser.getAccount())) {
-            return R.error(HttpStatus.ERROR,"用户账号不能为空");
-        }
-        if(StringUtils.isBlank(sysUser.getPassword())) {
-            return R.error(HttpStatus.ERROR,"用户密码不能为空");
-        }
-
         sum = redisUtils.hasKey(sysUser.getAccount())?(int)redisUtils.get(sysUser.getAccount()):0;
         if(sum >= count){
             return R.error(HttpStatus.ERROR,"登录失败次数过来，请稍后再试");
@@ -264,14 +224,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if(!RegularCheckUtils.checkPassWord(newPassword)){
             return R.error(HttpStatus.ERROR,"口令长度大于等于8位且为数字、字母、特殊字符2种及以上组合的");
         }
-
         SysUser sysUser = new SysUser();
         sysUser.setPassword(EncryptionUtils.encryption(newPassword));
         sysUser.setLastUpdatePasswordTime(new Date());
         int update = sysUserMapper.update(sysUser, new QueryWrapper<SysUser>()
                 .eq("user_id", userId).eq("password", EncryptionUtils.encryption(oldPassword)));
         if(update<=0){
-            return R.error(HttpStatus.ERROR,"找不到匹配的数据，请检查手机号和旧密码是否输入正确");
+            return R.error(HttpStatus.ERROR,"找不到匹配的数据，请检查用户id和旧密码是否正确");
         }
         return R.ok(HttpStatus.SUCCESS,"修改密码成功");
     }
